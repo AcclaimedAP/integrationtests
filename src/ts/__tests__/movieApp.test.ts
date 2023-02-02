@@ -1,8 +1,11 @@
 /**
  * @jest-environment jsdom
  */
-import { init, handleSubmit } from "../movieApp";
+import { IMovie } from "../models/Movie";
+import { init } from "../movieApp";
 import * as movieApp from "../movieApp";
+import * as movieservice from "../services/movieservice";
+jest.mock("../services/movieservice");
 beforeEach(() => {
   document.body.innerHTML = "";
 
@@ -34,12 +37,8 @@ describe("init", () => {
     form.dispatchEvent(submitEvent);
     expect(preventDefault).toHaveBeenCalled();
   });
-  test("Tests for handleSubmit", () => {
-    document.body.innerHTML = `<form id="searchForm">
-      <input type="text" id="searchText" placeholder="Skriv titel här" />
-      <button type="submit" id="search">Sök</button>
-    </form>
-    <div id="movie-container"></div>`;
+
+  test("Tests if handleSubmit gets called", () => {
     const handleSubmitSpy = jest.spyOn(movieApp, "handleSubmit").mockReturnValue(
       new Promise<void>((resolve) => {
         resolve();
@@ -47,8 +46,20 @@ describe("init", () => {
     );
     movieApp.init();
     const form = document.querySelector("form") as HTMLFormElement;
-    form.submit();
-    expect(handleSubmitSpy).toHaveBeenCalled();
+    form.dispatchEvent(new Event("submit"));
+    expect(handleSubmitSpy).toBeCalled();
     handleSubmitSpy.mockRestore();
+  });
+});
+
+describe("handleSubmit", () => {
+  test("should call getData", async () => {
+    let searchInput = document.getElementById("searchText") as HTMLInputElement;
+    const searchData = "Kung Pow";
+    const getDataSpy = jest.spyOn(movieservice, "getData").mockReturnValue(Promise.resolve([]));
+    searchInput.value = searchData;
+    await movieApp.handleSubmit();
+    expect(getDataSpy).toBeCalled();
+    getDataSpy.mockRestore();
   });
 });
