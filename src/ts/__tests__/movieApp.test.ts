@@ -4,6 +4,7 @@
 import { IMovie } from "../models/Movie";
 import * as movieApp from "../movieApp";
 import * as movieservice from "../services/movieservice";
+
 jest.mock("../services/movieservice");
 beforeEach(() => {
   document.body.innerHTML = "";
@@ -76,7 +77,7 @@ describe("handleSubmit", () => {
 
   test("Should call displayNoResult", async () => {
     let searchInput = document.getElementById("searchText") as HTMLInputElement;
-    const searchData = "";
+    const searchData = "The Matrix";
     const displayNoResultSpy = jest.spyOn(movieApp, "displayNoResult").mockReturnValue();
     searchInput.value = searchData;
     await movieApp.handleSubmit();
