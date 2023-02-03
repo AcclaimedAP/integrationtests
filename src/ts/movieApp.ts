@@ -7,17 +7,14 @@ export const init = () => {
   let form = document.getElementById("searchForm") as HTMLFormElement;
   form.addEventListener("submit", (e: SubmitEvent) => {
     e.preventDefault();
-    handleSubmit();
+    exports.handleSubmit();
   });
 };
 
 export async function handleSubmit() {
-  let searchText = (document.getElementById("searchText") as HTMLInputElement)
-    .value;
+  let searchText = (document.getElementById("searchText") as HTMLInputElement).value;
 
-  let container: HTMLDivElement = document.getElementById(
-    "movie-container"
-  ) as HTMLDivElement;
+  let container: HTMLDivElement = document.getElementById("movie-container") as HTMLDivElement;
   container.innerHTML = "";
 
   try {

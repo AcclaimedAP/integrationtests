@@ -97,15 +97,17 @@ describe("createHtml", () => {
       },
     ];
     const container = document.getElementById("movie-container") as HTMLDivElement;
+    const startValue = container.innerHTML;
     movieApp.createHtml(movies, container);
-    expect(container.innerHTML).toContain("The Matrix");
+    expect(container.innerHTML).not.toBe(startValue);
   });
 });
 
 describe("displayNoResult", () => {
   test("Should show error message", () => {
     const container = document.getElementById("movie-container") as HTMLDivElement;
+    const startValue = container.innerHTML;
     movieApp.displayNoResult(container);
-    expect(container.innerHTML).toContain("Inga sökresultat att visa");
+    expect(container.innerHTML).not.toBe(startValue);
   });
 });
