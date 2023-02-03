@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 import { IMovie } from "../models/Movie";
-import { init } from "../movieApp";
 import * as movieApp from "../movieApp";
 import * as movieservice from "../services/movieservice";
 jest.mock("../services/movieservice");
@@ -21,7 +20,7 @@ describe("init", () => {
     const form = document.getElementById("searchForm") as HTMLFormElement;
     const spy = jest.spyOn(form, "addEventListener");
 
-    init();
+    movieApp.init();
 
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();
@@ -33,7 +32,7 @@ describe("init", () => {
 
     (submitEvent as Event).preventDefault = preventDefault;
 
-    init();
+    movieApp.init();
     form.dispatchEvent(submitEvent);
     expect(preventDefault).toHaveBeenCalled();
   });
@@ -57,9 +56,56 @@ describe("handleSubmit", () => {
     let searchInput = document.getElementById("searchText") as HTMLInputElement;
     const searchData = "Kung Pow";
     const getDataSpy = jest.spyOn(movieservice, "getData").mockReturnValue(Promise.resolve([]));
+
     searchInput.value = searchData;
     await movieApp.handleSubmit();
     expect(getDataSpy).toBeCalled();
+
     getDataSpy.mockRestore();
+  });
+
+  test("Should call createHtml if valid", async () => {
+    let searchInput = document.getElementById("searchText") as HTMLInputElement;
+    const searchData = "Kung Pow";
+    const createHtmlSpy = jest.spyOn(movieApp, "createHtml").mockReturnValue();
+    searchInput.value = searchData;
+    await movieApp.handleSubmit();
+    expect(createHtmlSpy).toBeCalled();
+    createHtmlSpy.mockRestore();
+  });
+
+  test("Should call displayNoResult", async () => {
+    let searchInput = document.getElementById("searchText") as HTMLInputElement;
+    const searchData = "";
+    const displayNoResultSpy = jest.spyOn(movieApp, "displayNoResult").mockReturnValue();
+    searchInput.value = searchData;
+    await movieApp.handleSubmit();
+    expect(displayNoResultSpy).toBeCalled();
+    displayNoResultSpy.mockRestore();
+  });
+});
+
+describe("createHtml", () => {
+  test("Should create html element for movies", () => {
+    const movies: IMovie[] = [
+      {
+        Title: "The Matrix",
+        Year: "1999",
+        imdbID: "tt0133093",
+        Type: "movie",
+        Poster: "...",
+      },
+    ];
+    const container = document.getElementById("movie-container") as HTMLDivElement;
+    movieApp.createHtml(movies, container);
+    expect(container.innerHTML).toContain("The Matrix");
+  });
+});
+
+describe("displayNoResult", () => {
+  test("Should show error message", () => {
+    const container = document.getElementById("movie-container") as HTMLDivElement;
+    movieApp.displayNoResult(container);
+    expect(container.innerHTML).toContain("Inga sökresultat att visa");
   });
 });
