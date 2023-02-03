@@ -109,6 +109,6 @@ describe("displayNoResult", () => {
     const container = document.getElementById("movie-container") as HTMLDivElement;
     const startValue = container.innerHTML;
     movieApp.displayNoResult(container);
-    expect(container.innerHTML).not.toBe(startValue);
+    expect(container.innerHTML).toBe("<p>Inga sökresultat att visa</p>");
   });
 });
