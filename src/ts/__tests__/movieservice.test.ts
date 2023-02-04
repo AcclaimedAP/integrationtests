@@ -14,7 +14,7 @@ jest.mock("axios", () => ({
 
 test("should get data correctly", async () => {
   let response = await getData("txt");
-  expect(response.length).toBe(3);
+  expect(response.length).toBe(testData.length);
 });
 
 test("should not get data", async () => {
