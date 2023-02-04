@@ -25,7 +25,6 @@ describe("movieSort", () => {
     expect(movies).toStrictEqual(
       [...movies].sort((a: IMovie, b: IMovie) => {
         if (a.Title > b.Title) {
-          console.log(a.Title + " > " + b.Title);
           return 1;
         }
         if (a.Title < b.Title) {
